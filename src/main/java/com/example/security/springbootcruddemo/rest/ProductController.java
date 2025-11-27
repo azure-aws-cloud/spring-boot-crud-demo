@@ -2,12 +2,13 @@ package com.example.security.springbootcruddemo.rest;
 
 import com.example.security.springbootcruddemo.model.Product;
 import com.example.security.springbootcruddemo.service.ProductService;
-import lombok.NoArgsConstructor;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product")
@@ -16,51 +17,59 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping // Default GET method
-    String getAllProducts(){
-        return "ALL Products";
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAll());
     }
-
-    /*@GetMapping("/all")
-    List<Product> findAllProducts(){
-       return this.productService.getAll();
-    }
-    @GetMapping("byid")
-    public Optional<Product> getByQueryParam(@RequestParam Long id) {
-        return this.productService.getById(id);
-    }*/
 
     @GetMapping("{id}")
-    Optional<Product> getProduct(@PathVariable Long id){
-        return this.productService.getById(id);
+    public ResponseEntity<Product> getProduct(@PathVariable  Long id) {
+        return productService.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Product create(@RequestBody Product product){
-        return this.productService.save(product);
+    public ResponseEntity<Product> createProduct(
+            @Validated @RequestBody Product product) {
+
+        Product savedProduct = productService.save(product);
+        return ResponseEntity.ok(savedProduct);
     }
-    @PutMapping
-    public Product update(@RequestBody Product product){
-        return this.productService.save(product);
+
+    @PutMapping("{id}")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @Validated @RequestBody Product product) {
+
+        return this.productService.getById(id).map(existing->{
+            if (product.getName() != null) {
+                existing.setName(product.getName());
+            }
+            if (product.getDescription() != null) {
+                existing.setDescription(product.getDescription());
+            }
+            // Add any other partial update fields...
+            return ResponseEntity.ok(productService.save(existing));
+        }).orElse(ResponseEntity.notFound().build());
     }
-    @PatchMapping
-    public Product patch(@RequestBody Product product){
-        Optional<Product> existingOpt = productService.getById(product.getId());
 
-        Product existing = existingOpt.orElseThrow(
-                () -> new RuntimeException("Product not found with id: " + product.getId())
-        );
+    @PatchMapping("{id}")
+    public ResponseEntity<Product> patchProduct(
+            @PathVariable Long id,
+            @Validated @RequestBody Product product) {
 
-        if (product.getName() != null) {
-            existing.setName(product.getName());
-        }
-
-        if (product.getDescription() != null) {
-            existing.setDescription(product.getDescription());
-        }
-
-        // Add other fields as needed
-
-        return productService.save(existing);
+        return productService.getById(id)
+                .map(existing -> {
+                    if (product.getName() != null) {
+                        existing.setName(product.getName());
+                    }
+                    if (product.getDescription() != null) {
+                        existing.setDescription(product.getDescription());
+                    }
+                    // Add any other partial update fields...
+                    return ResponseEntity.ok(productService.save(existing));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }

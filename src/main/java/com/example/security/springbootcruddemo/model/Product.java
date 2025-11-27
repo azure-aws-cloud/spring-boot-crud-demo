@@ -9,6 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -24,10 +27,13 @@ public class Product {
     @JsonProperty("id") // rename field in JSON
     private Long id;
 
+    @NotBlank(message="Name is mandatory")
     @JsonProperty("name") // rename field in JSON
     private String name;
 
+    @NotBlank(message = "description is mandatory")
     private String description;
+
 
     @JsonIgnore   // exclude from JSON response
     private String internalCode;
