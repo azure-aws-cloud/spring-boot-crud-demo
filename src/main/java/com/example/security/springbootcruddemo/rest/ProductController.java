@@ -57,7 +57,7 @@ public class ProductController {
     @PatchMapping("{id}")
     public ResponseEntity<Product> patchProduct(
             @PathVariable Long id,
-            @Validated @RequestBody Product product) {
+            @RequestBody Product product) {
 
         return productService.getById(id)
                 .map(existing -> {

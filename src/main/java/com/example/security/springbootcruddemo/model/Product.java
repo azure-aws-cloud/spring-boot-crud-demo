@@ -28,9 +28,11 @@ public class Product {
     private Long id;
 
     @NotBlank(message="Name is mandatory")
+    @NotNull
     @JsonProperty("name") // rename field in JSON
     private String name;
 
+    @NotNull
     @NotBlank(message = "description is mandatory")
     private String description;
 
