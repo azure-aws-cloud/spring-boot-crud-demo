@@ -46,6 +46,7 @@ class ProductControllerTest {
     void testCreateProduct() throws Exception {
         Product product = new Product();
         product.setName("Laptop");
+        product.setDescription("HP Gaming laptop");
 
         when(productService.save(any())).thenReturn(product);
 
@@ -71,7 +72,7 @@ class ProductControllerTest {
         when(productService.getById(1L)).thenReturn(Optional.of(existing));
         when(productService.save(any())).thenReturn(existing);
 
-        mockMvc.perform(patch("/api/product")
+        mockMvc.perform(patch("/api/product/1")
                         .contentType("application/json")
                         .content(mapper.writeValueAsString(patchData)))
                 .andExpect(status().isOk())
