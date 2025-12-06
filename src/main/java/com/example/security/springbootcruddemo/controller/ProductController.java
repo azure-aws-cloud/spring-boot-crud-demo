@@ -1,8 +1,7 @@
-package com.example.security.springbootcruddemo.rest;
+package com.example.security.springbootcruddemo.controller;
 
 import com.example.security.springbootcruddemo.model.Product;
 import com.example.security.springbootcruddemo.service.ProductService;
-import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
