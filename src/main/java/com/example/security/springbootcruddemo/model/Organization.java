@@ -1,6 +1,5 @@
 package com.example.security.springbootcruddemo.model;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "ORGANIZATION")
+@Table(name = "organization")
 public class Organization {
 
     @Id
@@ -22,16 +21,13 @@ public class Organization {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    // Self-referencing many-to-one: each employee has one manager
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MANAGER_ID") // FK column referencing EMPLOYEE_ID
+    @JoinColumn(name = "MANAGER_ID")
     private Organization manager;
 
-    // Self-referencing one-to-many: a manager can have many subordinates
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
     private Set<Organization> subordinates = new HashSet<>();
 
-    // equals and hashCode based only on employeeId
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,4 +40,3 @@ public class Organization {
         return getClass().hashCode();
     }
 }
-

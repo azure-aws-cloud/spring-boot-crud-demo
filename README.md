@@ -53,3 +53,6 @@ ORDER BY m.employee_id, e.employee_id;
 ```
 ## Results for employees who share same manager
 ![img_1.png](img_1.png)
+
+## Part distributor model
+![img_4.png](img_4.png)

@@ -1,34 +1,28 @@
 package com.example.security.springbootcruddemo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Data;
-
-import java.time.LocalDate;
-
 
 @Entity
 @Data
-@Table(name = "PRODUCT")
-@JsonInclude(JsonInclude.Include.NON_NULL) // Don't include null fields in JSON
+@Table(name = "product")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id") // rename field in JSON
+    @JsonProperty("id")
     private Long id;
 
     @NotBlank(message="Name is mandatory")
-    @Column(name = "name")
     @NotNull
-    @JsonProperty("name") // rename field in JSON
+    @Column(name = "name")
+    @JsonProperty("name")
     private String name;
 
     @Column(name="description")
@@ -36,29 +30,7 @@ public class Product {
     @NotBlank(message = "description is mandatory")
     private String description;
 
-
-    @JsonIgnore   // exclude from JSON response
+    @JsonIgnore
+    @Column(name = "internal_code")
     private String internalCode;
-
-
-    public static void main(String[] args) {
-        try {
-            // Create Product object
-            Product product = new Product();
-            product.setId(1L);
-            product.setName("Laptop");
-            product.setDescription("High performance gaming laptop");
-            product.setInternalCode("SECRET123"); // Will not appear due to @JsonIgnore
-
-            // Convert to JSON
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonOutput = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(product);
-
-            // Print JSON
-            System.out.println(jsonOutput);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
-

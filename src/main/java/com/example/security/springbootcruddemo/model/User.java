@@ -10,7 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,7 +33,6 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    // equals and hashCode based only on id
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
